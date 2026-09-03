@@ -1,0 +1,84 @@
+import styled from "styled-components";
+
+import { PlanetProperties } from "../interfaces/planet";
+import { numberWithCommas } from "../utils/common";
+import {
+  featuresOfPlanet,
+  findFactionForPlanetWithName
+} from "../utils/planets";
+
+const PlanetDataContainer = styled.div<{ $factionColor?: string }>`
+  width: fit-content;
+  max-width: 280px;
+  height: fit-content;
+  padding: 4px 2px 2px;
+  font-size: 0.95em;
+  border-left: 3px solid ${props => props.$factionColor || "transparent"};
+  padding-left: 10px;
+  p {
+    margin: 0 0 4px;
+  }
+  h2 {
+    margin: 0 0 8px;
+    font-size: 1.15em;
+  }
+  a {
+    color: inherit;
+  }
+  span {
+    font-weight: bold;
+  }
+`;
+
+const PlanetData = (planet: PlanetProperties) => {
+  const { name, sector, region, link, grid } = planet;
+  const { factionName, colour } = findFactionForPlanetWithName(name);
+  const { climate, terrain, population } = featuresOfPlanet(name);
+
+  return (
+    <PlanetDataContainer $factionColor={colour}>
+      <h2>
+        {name} {grid && "- " + grid}
+      </h2>
+      {factionName && (
+        <p>
+          <span>Held by:</span> {factionName}
+        </p>
+      )}
+      {sector && (
+        <p>
+          <span>Sector:</span> {sector}
+        </p>
+      )}
+      {region && (
+        <p>
+          <span>Region:</span> {region}
+        </p>
+      )}
+      {population && (
+        <p>
+          <span>Population:</span> {numberWithCommas(population)}
+        </p>
+      )}
+      {climate && (
+        <p>
+          <span>Climate:</span> {climate}
+        </p>
+      )}
+      {terrain && (
+        <p>
+          <span>Terrain:</span> {terrain}
+        </p>
+      )}
+      {link && (
+        <p>
+          <a href={link} target="_blank" rel="noreferrer">
+            Wookieepedia
+          </a>
+        </p>
+      )}
+    </PlanetDataContainer>
+  );
+};
+
+export default PlanetData;
